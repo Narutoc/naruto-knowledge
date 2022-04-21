@@ -25,6 +25,8 @@ import java.util.List;
 @Slf4j
 public class MenuServiceImpl implements MenuService {
 
+    private static final String EMPTY_ID = "menu id is empty";
+
     @Autowired
     MenuMapper menuMapper;
 
@@ -52,7 +54,7 @@ public class MenuServiceImpl implements MenuService {
         } catch (BindingException bind) {
             log.error("addMenuInfo bindingException is " + bind.getMessage());
         } catch (Exception exception) {
-            log.error("addMenuInfo exception is" + exception.getMessage());
+            log.error("addMenuInfo exception is " + exception.getMessage());
         }
         throw new ServiceException(Constants.INT_500, "addMenuInfo caught en error");
     }
@@ -101,8 +103,8 @@ public class MenuServiceImpl implements MenuService {
     public MenuModel getSingleMenu(String menuId) throws ServiceException {
         try {
             if (StringUtils.isEmpty(menuId)) {
-                log.error("menu id is empty");
-                throw new ServiceException(Constants.INT_400, "menu id is empty");
+                log.error(EMPTY_ID);
+                throw new ServiceException(Constants.INT_400, EMPTY_ID);
             }
             return menuMapper.getSingleMenu(menuId);
         } catch (BindingException bind) {
@@ -123,8 +125,8 @@ public class MenuServiceImpl implements MenuService {
     public void updateMenuInfo(MenuModel model) throws ServiceException {
         try {
             if (StringUtils.isEmpty(model.getMenuId())) {
-                log.error("menu id is empty");
-                throw new ServiceException(Constants.INT_400, "menu id is empty");
+                log.error(EMPTY_ID);
+                throw new ServiceException(Constants.INT_400, EMPTY_ID);
             }
             MenuModel single = menuMapper.getSingleMenu(model.getMenuId());
             if (single == null) {
