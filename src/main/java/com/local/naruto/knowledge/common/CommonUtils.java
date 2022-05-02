@@ -5,7 +5,17 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+/**
+ * 通用方法
+ *
+ * @Author Naruto Chen
+ * @Date 2022/05/02
+ */
 public class CommonUtils {
+
+    private CommonUtils() {
+
+    }
 
     public static Map<String, Object> getConditionMap(ConditionModel param) {
         Map<String, Object> map = new HashMap<>();
