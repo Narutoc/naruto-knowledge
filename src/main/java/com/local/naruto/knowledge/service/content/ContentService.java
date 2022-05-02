@@ -30,4 +30,12 @@ public interface ContentService {
      */
     void batchUpdateContent(@Param("contentList") List<ContentModel> contentList)
         throws ServiceException;
+
+    /**
+     * 根据objectId删除多语言信息
+     *
+     * @param objectId 对象id
+     * @throws ServiceException 服务异常
+     */
+    void deleteByObjectId(@Param("objectId") String objectId) throws ServiceException;
 }

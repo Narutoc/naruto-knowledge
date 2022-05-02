@@ -27,4 +27,11 @@ public interface ContentMapper {
      * @param contentList 内容信息列表
      */
     void batchUpdateContent(@Param("contentList") List<ContentModel> contentList);
+
+    /**
+     * 根据objectId删除多语言信息
+     *
+     * @param objectId 对象id
+     */
+    void deleteByObjectId(@Param("objectId") String objectId);
 }

@@ -41,4 +41,9 @@
             WHERE contentid = #{content.contentId}
         </foreach>
     </update>
+
+    <!--根据objectId删除关联的信息-->
+    <delete id="deleteByObjectId" parameterType="string">
+        DELETE FROM tbl_content_info WHERE objectid = #{objectId}
+    </delete>
 </mapper>

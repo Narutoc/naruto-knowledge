@@ -56,13 +56,7 @@ public class MenuServiceImpl implements MenuService {
                     throw ServiceException.paramException("parent menu does not exist");
                 }
             }
-            List<ContentModel> contentList = model.getContentList();
-            if (CollectionUtils.isNotEmpty(contentList)) {
-                for (ContentModel content : contentList) {
-                    content.setObjectId(model.getMenuId());
-                }
-                contentService.batchInsertContent(contentList);
-            }
+            handleMenuContent(model.getContentList(), model.getMenuId());
             menuMapper.addMenuInfo(model);
             return;
         } catch (BindingException bind) {
@@ -134,6 +128,8 @@ public class MenuServiceImpl implements MenuService {
                 log.error("updated menu does not exist");
                 throw new ServiceException(Constants.INT_400, "updated menu does not exist");
             }
+            // 多语言信息处理：先删除，再新增
+            handleMenuContent(model.getContentList(), model.getMenuId());
             model.setLastModifiedDate(DateUtils.getUtcTime());
             menuMapper.updateMenuInfo(model);
             return;
@@ -143,5 +139,18 @@ public class MenuServiceImpl implements MenuService {
             log.error("updateMenuInfo exception is" + exception.getMessage());
         }
         throw new ServiceException(Constants.INT_500, "updateMenuInfo caught en error");
+    }
+
+
+    private void handleMenuContent(List<ContentModel> contentList, String menuId) {
+        if (CollectionUtils.isNotEmpty(contentList)) {
+            // 先删除菜单语言信息
+            contentService.deleteByObjectId(menuId);
+            for (ContentModel content : contentList) {
+                content.setObjectId(menuId);
+            }
+            // 再新增菜单语言信息
+            contentService.batchInsertContent(contentList);
+        }
     }
 }

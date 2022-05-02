@@ -76,4 +76,23 @@ public class ContentServiceImpl implements ContentService {
         }
         throw new ServiceException(Constants.INT_500, "batchUpdateContent caught en error");
     }
+
+    /**
+     * 根据objectId删除多语言信息
+     *
+     * @param objectId 对象id
+     * @throws ServiceException 服务异常
+     */
+    @Override
+    public void deleteByObjectId(String objectId) throws ServiceException {
+        try {
+            contentMapper.deleteByObjectId(objectId);
+            return;
+        } catch (BindingException bind) {
+            log.error("deleteByObjectId bindingException is " + bind.getMessage());
+        } catch (Exception exception) {
+            log.error("deleteByObjectId exception is " + exception.getMessage());
+        }
+        throw new ServiceException(Constants.INT_500, "deleteByObjectId caught en error");
+    }
 }
