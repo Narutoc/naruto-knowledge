@@ -1,7 +1,7 @@
 package com.local.naruto.knowledge.service.menu;
 
-import com.local.naruto.knowledge.entity.MenuModel;
 import com.local.naruto.exception.ServiceException;
+import com.local.naruto.knowledge.entity.MenuModel;
 import java.util.List;
 
 /**
@@ -11,6 +11,7 @@ import java.util.List;
  * @Date 2022/02/11
  */
 public interface MenuService {
+
     /**
      * 新增菜单信息
      *

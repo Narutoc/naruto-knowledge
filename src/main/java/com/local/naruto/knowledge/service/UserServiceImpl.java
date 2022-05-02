@@ -1,22 +1,21 @@
 package com.local.naruto.knowledge.service;
 
-import com.local.naruto.knowledge.service.user.UserService;
-import com.local.naruto.knowledge.common.CommonUtils;
 import com.local.naruto.common.JsonResult;
+import com.local.naruto.exception.ServiceException;
+import com.local.naruto.knowledge.common.CommonUtils;
 import com.local.naruto.knowledge.entity.ConditionModel;
 import com.local.naruto.knowledge.entity.UserModel;
-import com.local.naruto.exception.ServiceException;
 import com.local.naruto.knowledge.mapper.user.UserMapper;
+import com.local.naruto.knowledge.service.user.UserService;
 import com.local.naruto.utils.DateUtils;
 import com.local.naruto.utils.UUIDUtils;
+import java.util.List;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.binding.BindingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * UserService业务实现
@@ -79,7 +78,7 @@ public class UserServiceImpl implements UserService {
         try {
             if (CollectionUtils.isNotEmpty(list)) {
                 for (UserModel single : list) {
-                    single.setId(UUIDUtils.generateUuid());
+                    single.setUserId(UUIDUtils.generateUuid());
                     single.setCreatedDate(DateUtils.getUtcTime());
                     single.setLastModifiedDate(DateUtils.getUtcTime());
                 }

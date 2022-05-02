@@ -6,7 +6,8 @@ import java.util.Locale;
 import java.util.Map;
 
 public class CommonUtils {
-    public static Map<String,Object> getConditionMap(ConditionModel param){
+
+    public static Map<String, Object> getConditionMap(ConditionModel param) {
         Map<String, Object> map = new HashMap<>();
         map.put("userName", param.getUserName().toLowerCase(Locale.ROOT));
         map.put("realName", param.getRealName().toLowerCase(Locale.ROOT));

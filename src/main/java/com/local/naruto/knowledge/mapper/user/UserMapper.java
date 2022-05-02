@@ -1,11 +1,10 @@
 package com.local.naruto.knowledge.mapper.user;
 
 import com.local.naruto.knowledge.entity.UserModel;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
 import java.util.Map;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 用户信息dao层
@@ -15,6 +14,7 @@ import java.util.Map;
  */
 @Mapper
 public interface UserMapper {
+
     /**
      * 查询所有用户信息
      *

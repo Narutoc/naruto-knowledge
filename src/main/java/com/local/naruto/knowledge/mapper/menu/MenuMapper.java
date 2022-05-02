@@ -1,9 +1,9 @@
 package com.local.naruto.knowledge.mapper.menu;
 
 import com.local.naruto.knowledge.entity.MenuModel;
+import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import java.util.List;
 
 /**
  * 菜单信息dao层
@@ -13,6 +13,7 @@ import java.util.List;
  */
 @Mapper
 public interface MenuMapper {
+
     /**
      * 新增菜单信息
      *

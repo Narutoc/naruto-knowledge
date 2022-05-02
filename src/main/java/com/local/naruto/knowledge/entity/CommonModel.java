@@ -1,5 +1,6 @@
 package com.local.naruto.knowledge.entity;
 
+import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,7 +13,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CommonModel {
+
+    private String status;
+    @NotNull
     private String createdUser;
+    @NotNull
     private String createdDate;
     private String lastModifiedUser;
     private String lastModifiedDate;

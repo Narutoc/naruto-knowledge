@@ -4,6 +4,7 @@ import com.local.naruto.common.JsonResult;
 import com.local.naruto.knowledge.entity.ConditionModel;
 import com.local.naruto.knowledge.entity.UserModel;
 import com.local.naruto.knowledge.service.user.UserService;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,8 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 /**
  * User控制层
  *
@@ -25,6 +24,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/rest/user")
 public class UserController {
+
     @Autowired
     private UserService userService;
 

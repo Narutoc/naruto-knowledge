@@ -12,6 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ConditionModel {
+
     private String userName;
     private String realName;
     private int currentPage;

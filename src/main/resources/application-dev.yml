@@ -5,7 +5,7 @@ spring:
   datasource:
     username: root
     password: root
-    url: jdbc:mysql://localhost:3306/master?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+    url: jdbc:mysql://localhost:3306/knowledge?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
     driver-class-name: com.mysql.cj.jdbc.Driver
     #配置初始化大小/最小/最大
     initial-size: 1
@@ -31,6 +31,8 @@ spring:
     dynamodb:
       regions: us-esat-2
       tableame: dynamodb_demo
+  application:
+    name: naruto-knowledge
 
 mybatis:
   mapper-locations: classpath:mapper/*Mapper.xml
@@ -42,5 +44,7 @@ mybatis:
 logging:
   level:
     com:
-      example:
-        mapper : debug
+      local:
+        naruto:
+          knowledge:
+            mapper: debug

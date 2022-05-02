@@ -1,19 +1,22 @@
 package com.local.naruto.knowledge.service;
 
-import com.local.naruto.knowledge.service.menu.MenuService;
 import com.local.naruto.common.Constants;
-import com.local.naruto.knowledge.entity.MenuModel;
 import com.local.naruto.exception.ServiceException;
+import com.local.naruto.knowledge.entity.ContentModel;
+import com.local.naruto.knowledge.entity.MenuModel;
 import com.local.naruto.knowledge.mapper.menu.MenuMapper;
+import com.local.naruto.knowledge.service.content.ContentService;
+import com.local.naruto.knowledge.service.menu.MenuService;
 import com.local.naruto.utils.DateUtils;
 import com.local.naruto.utils.UUIDUtils;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.binding.BindingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 菜单业务实现
@@ -30,6 +33,9 @@ public class MenuServiceImpl implements MenuService {
     @Autowired
     MenuMapper menuMapper;
 
+    @Autowired
+    ContentService contentService;
+
     /**
      * 新增菜单信息
      *
@@ -37,17 +43,25 @@ public class MenuServiceImpl implements MenuService {
      * @throws ServiceException 异常
      */
     @Override
+    @Transactional(rollbackFor = {ServiceException.class})
     public void addMenuInfo(MenuModel model) throws ServiceException {
         try {
             model.setMenuId(UUIDUtils.generateUuid());
             model.setCreatedDate(DateUtils.getUtcTime());
-            configureMenuLang(model);
+            model.setLastModifiedDate(DateUtils.getUtcTime());
             if (StringUtils.isNotEmpty(model.getParentId())) {
                 MenuModel parent = menuMapper.getSingleMenu(model.getParentId());
                 if (parent == null) {
                     log.error("parent menu does not exist");
                     throw ServiceException.paramException("parent menu does not exist");
                 }
+            }
+            List<ContentModel> contentList = model.getContentList();
+            if (CollectionUtils.isNotEmpty(contentList)) {
+                for (ContentModel content : contentList) {
+                    content.setObjectId(model.getMenuId());
+                }
+                contentService.batchInsertContent(contentList);
             }
             menuMapper.addMenuInfo(model);
             return;
@@ -77,20 +91,6 @@ public class MenuServiceImpl implements MenuService {
         throw new ServiceException(Constants.INT_500, "getAllMenu caught en error");
     }
 
-    private void configureMenuLang(MenuModel model) {
-        // 默认为中文
-        if (StringUtils.isEmpty(model.getLanguage())
-            || model.getLanguage().equals(Constants.STRING_ZERO)) {
-            model.setLanguage(Constants.STRING_ZERO);
-            model.setEnDescription(null);
-            model.setEnName(null);
-        }
-        if (model.getLanguage().equals(Constants.STRING_ONE)) {
-            model.setZhDescription(null);
-            model.setZhName(null);
-        }
-        model.setLastModifiedDate(DateUtils.getUtcTime());
-    }
 
     /**
      * 查询单个菜单
@@ -122,6 +122,7 @@ public class MenuServiceImpl implements MenuService {
      * @throws ServiceException 异常
      */
     @Override
+    @Transactional(rollbackFor = {ServiceException.class})
     public void updateMenuInfo(MenuModel model) throws ServiceException {
         try {
             if (StringUtils.isEmpty(model.getMenuId())) {
@@ -133,7 +134,7 @@ public class MenuServiceImpl implements MenuService {
                 log.error("updated menu does not exist");
                 throw new ServiceException(Constants.INT_400, "updated menu does not exist");
             }
-            configureMenuLang(model);
+            model.setLastModifiedDate(DateUtils.getUtcTime());
             menuMapper.updateMenuInfo(model);
             return;
         } catch (BindingException bind) {

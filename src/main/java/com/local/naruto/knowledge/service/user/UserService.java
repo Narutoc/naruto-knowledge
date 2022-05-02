@@ -1,9 +1,9 @@
 package com.local.naruto.knowledge.service.user;
 
 import com.local.naruto.common.JsonResult;
+import com.local.naruto.exception.ServiceException;
 import com.local.naruto.knowledge.entity.ConditionModel;
 import com.local.naruto.knowledge.entity.UserModel;
-import com.local.naruto.exception.ServiceException;
 import java.util.List;
 
 /**
@@ -13,6 +13,7 @@ import java.util.List;
  * @Date 2022/02/08
  */
 public interface UserService {
+
     /**
      * 查询所有用户信息
      *

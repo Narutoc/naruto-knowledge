@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableCaching
 @EnableTransactionManagement
 public class KnowledgeApplication {
+
     public static void main(String[] args) {
         SpringApplication.run(KnowledgeApplication.class, args);
     }

@@ -14,7 +14,8 @@ import lombok.Setter;
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserModel extends CommonModel {
-    private String id;
+
+    private String userId;
     private String userName;
     private String password;
     private String realName;
