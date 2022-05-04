@@ -3,9 +3,10 @@ server:
 
 spring:
   datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
     username: root
     password: root
-    url: jdbc:mysql://localhost:3306/knowledge?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+    url: jdbc:mysql://localhost:3306/knowledge?rewriteBatchedStatements=true&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
     driver-class-name: com.mysql.cj.jdbc.Driver
     #配置初始化大小/最小/最大
     initial-size: 1
@@ -24,27 +25,44 @@ spring:
     #打开PSCache，并指定每个连接上PSCache的大小。oracle设为true，mysql设为false。分库分表较多推荐设置为false
     pool-prepared-statements: false
     max-pool-prepared-statement-per-connection-size: 20
-  data:
-    aws:
-      access-key:
-      secret-key:
-    dynamodb:
-      regions: us-esat-2
-      tableame: dynamodb_demo
+
+  jpa:
+    show-sql: true
+    ddl-auto: update
+    properties:
+      hibernate.id.new_generator_mappings: true
+      hibernate.cache.use_second_level_cache: false
+      hibernate.cache.use_query_cache: false
+      hiberante.generate_statistics: true
+      hibernate.globally_quoted_identifiers: true
+      hibernate.jdbc.time_zone: UTC
+      hibernate.jdbc.batch_size: 500
+      hibernate.jdbc.batch_versioned_data: true
+      hibernate.order_inserts: true
+      hibernate.order_updates: true
+
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    ssl: false
+    database: 1
+    jedis:
+      pool:
+        max-idle: 10
+        min-idle: 1
+        max-active: 8
+        max-wait: -1
+        timeout: 2000s
+
   application:
     name: naruto-knowledge
 
 mybatis:
   mapper-locations: classpath:mapper/*Mapper.xml
-  type-aliases-package: com.local.naruto.knowledge.entity
+  type-aliases-package: com.local.naruto.knowledge.mybatis.entity
   configuration:
     jdbc-type-for-null: 'null'
 
 #showSql
 logging:
-  level:
-    com:
-      local:
-        naruto:
-          knowledge:
-            mapper: debug
+  level.com.local.naruto.knowledge.mybatis.maapper: debug

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.local.naruto.knowledge.mapper.content.ContentMapper">
+<mapper namespace="com.local.naruto.knowledge.mybatis.mapper.content.ContentMapper">
     <!--批量插入内容信息-->
     <insert id="batchInsertContent" parameterType="java.util.List">
         INSERT INTO tbl_content_info

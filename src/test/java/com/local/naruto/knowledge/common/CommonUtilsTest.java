@@ -2,7 +2,8 @@ package com.local.naruto.knowledge.common;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-import com.local.naruto.knowledge.entity.ConditionModel;
+import com.local.naruto.knowledge.mybatis.common.CommonUtils;
+import com.local.naruto.knowledge.mybatis.entity.ConditionModel;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 
