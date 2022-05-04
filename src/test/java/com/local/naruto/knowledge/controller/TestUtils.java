@@ -9,13 +9,13 @@ import org.springframework.http.MediaType;
 
 public class TestUtils {
 
-   public  static final MediaType APPLICATION_CONTENT = new MediaType(
+    public static final MediaType APPLICATION_CONTENT = new MediaType(
         MediaType.APPLICATION_JSON.getType(),
         MediaType.APPLICATION_JSON.getSubtype(),
         StandardCharsets.UTF_8
     );
 
-   public static byte[] convertObjectToJson(Object object) throws JsonProcessingException {
+    public static byte[] convertObjectToJson(Object object) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         mapper.setSerializationInclusion(Include.NON_NULL);
         JavaTimeModule module = new JavaTimeModule();

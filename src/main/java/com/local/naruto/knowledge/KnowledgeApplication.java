@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-@MapperScan("com.local.naruto.knowledge.mapper")
+@MapperScan("com.local.naruto.knowledge.mybatis.mapper")
 @SpringBootApplication
 @EnableCaching
 @EnableTransactionManagement

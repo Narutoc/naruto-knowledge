@@ -68,7 +68,8 @@
         )
         VALUES
         (
-        #{menuId},#{parentId}, #{status},#{sortNum},#{createdUser},#{createdDate}, #{lastModifiedUser},#{lastModifiedDate}
+        #{menuId},#{parentId}, #{status},#{sortNum},#{createdUser},#{createdDate},
+        #{lastModifiedUser},#{lastModifiedDate}
         )
     </insert>
 

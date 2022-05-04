@@ -7,8 +7,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.local.naruto.knowledge.controller.TestUtils;
-import com.local.naruto.knowledge.mybatis.entity.ConditionModel;
 import com.local.naruto.knowledge.mybatis.controller.demo.DemoController;
+import com.local.naruto.knowledge.mybatis.entity.ConditionModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.web.servlet.MockMvc;
