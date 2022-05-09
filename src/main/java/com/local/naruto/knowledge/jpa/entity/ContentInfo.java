@@ -5,10 +5,13 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 @Getter
 @Setter
@@ -20,6 +23,9 @@ public class ContentInfo extends CommonInfo {
     @Id
     @Column(name = "contentid", length = 32, nullable = false)
     private String contentId;
+
+    @Column(name = "objectid")
+    private String objectId;
 
     @Column(name = "lang")
     private int lang;
@@ -38,5 +44,7 @@ public class ContentInfo extends CommonInfo {
 
     @ManyToOne
     @JsonIgnore
+    @JoinColumn(name = "objectid", referencedColumnName = "menuid", insertable = false, updatable = false)
+    @NotFound(action = NotFoundAction.IGNORE)
     private MenuInfo menu;
 }

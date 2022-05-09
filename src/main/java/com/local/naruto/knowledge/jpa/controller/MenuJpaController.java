@@ -3,6 +3,7 @@ package com.local.naruto.knowledge.jpa.controller;
 import com.local.naruto.common.JsonResult;
 import com.local.naruto.knowledge.jpa.entity.MenuInfo;
 import com.local.naruto.knowledge.jpa.service.MenuJpaService;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,5 +32,15 @@ public class MenuJpaController {
     @GetMapping(value = "/single/{id}")
     public JsonResult<MenuInfo> getSingleMenu(@PathVariable String id) {
         return new JsonResult<>(menuJpaService.getSingleMenu(id));
+    }
+
+    /**
+     * 查询所有菜单
+     *
+     * @return list
+     */
+    @GetMapping
+    public JsonResult<List<MenuInfo>> getAllMenu() {
+        return new JsonResult<>(menuJpaService.getAllMenu());
     }
 }

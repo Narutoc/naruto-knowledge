@@ -96,6 +96,12 @@
             <artifactId>mybatis-spring-boot-starter</artifactId>
         </dependency>
 
+        <!--quartz定时调度依赖-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-quartz</artifactId>
+        </dependency>
+
         <!--mysql依赖包-->
         <dependency>
             <groupId>mysql</groupId>
