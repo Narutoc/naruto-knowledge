@@ -1,6 +1,6 @@
-package com.local.naruto.knowledge.config.trigger;
+package com.local.naruto.knowledge.quartz.trigger;
 
-import com.local.naruto.knowledge.config.job.TestCornJob;
+import com.local.naruto.knowledge.quartz.job.TestCornJob;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.JobBuilder;
 import org.quartz.JobDetail;

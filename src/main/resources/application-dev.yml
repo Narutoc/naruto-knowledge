@@ -57,6 +57,14 @@ spring:
   application:
     name: naruto-knowledge
 
+  data:
+    aws:
+      access-key: 1234556
+      secret-key: 12345676
+    dynamodb:
+      regions: US_WEST_2
+      tablename: tbl_dynamodb_info
+
 mybatis:
   mapper-locations: classpath:mapper/*Mapper.xml
   type-aliases-package: com.local.naruto.knowledge.mybatis.entity

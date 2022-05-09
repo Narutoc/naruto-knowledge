@@ -1,0 +1,1 @@
+package com.local.naruto.knowledge.aws;
