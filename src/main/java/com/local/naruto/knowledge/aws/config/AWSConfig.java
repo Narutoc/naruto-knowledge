@@ -14,6 +14,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+
+/**
+ * config for aws
+ * */
 @Configuration
 @EnableDynamoDBRepositories(basePackages = "com.local.naruto.knowledge.aws")
 public class AWSConfig {

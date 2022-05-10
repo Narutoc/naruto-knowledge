@@ -6,7 +6,7 @@ import org.socialsignin.spring.data.dynamodb.repository.EnableScan;
 import org.springframework.data.repository.CrudRepository;
 
 @EnableScan
-public interface UserInfoRepository extends CrudRepository<UserAwsInfo, String>,
+public interface UserAwsInfoRepository extends CrudRepository<UserAwsInfo, String>,
     UserInfoAdditionRepository {
 
     List<UserAwsInfo> findByLastName(String lastName);
