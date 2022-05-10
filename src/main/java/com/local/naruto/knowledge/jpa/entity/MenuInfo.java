@@ -16,6 +16,9 @@ import lombok.Setter;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
+/**
+ * menu info model
+ */
 @Getter
 @Setter
 @Entity

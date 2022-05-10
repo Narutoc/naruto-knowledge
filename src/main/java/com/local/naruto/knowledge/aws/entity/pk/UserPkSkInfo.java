@@ -6,6 +6,9 @@ import java.io.Serializable;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * pk and sk for user
+ */
 @ToString
 @Setter
 public class UserPkSkInfo implements Serializable {

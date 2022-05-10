@@ -9,6 +9,9 @@ import org.quartz.TriggerBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * config for quartz
+ */
 @Configuration
 public class QuartzConfig {
 

@@ -4,6 +4,9 @@ import com.local.naruto.exception.ServiceException;
 import com.local.naruto.knowledge.jpa.entity.MenuInfo;
 import java.util.List;
 
+/**
+ * MenuJpaService
+ */
 public interface MenuJpaService {
 
     /**

@@ -5,6 +5,9 @@ import java.util.List;
 import org.socialsignin.spring.data.dynamodb.repository.EnableScan;
 import org.springframework.data.repository.CrudRepository;
 
+/**
+ * UserAwsInfoRepository
+ */
 @EnableScan
 public interface UserAwsInfoRepository extends CrudRepository<UserAwsInfo, String>,
     UserInfoAdditionRepository {

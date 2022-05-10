@@ -5,6 +5,9 @@ import org.quartz.JobExecutionException;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.stereotype.Component;
 
+/**
+ * TestCornJob
+ */
 @Component
 public class TestCornJob extends QuartzJobBean {
 

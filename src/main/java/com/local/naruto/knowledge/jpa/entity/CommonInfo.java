@@ -6,6 +6,9 @@ import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * common info
+ */
 @Getter
 @Setter
 @MappedSuperclass

@@ -13,6 +13,9 @@ import lombok.Setter;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
+/**
+ * content info
+ */
 @Getter
 @Setter
 @Entity

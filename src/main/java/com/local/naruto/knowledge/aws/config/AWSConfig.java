@@ -17,36 +17,66 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * config for aws
- * */
+ */
 @Configuration
 @EnableDynamoDBRepositories(basePackages = "com.local.naruto.knowledge.aws")
 public class AWSConfig {
+
     @Value("${spring.data.aws.access-key}")
     private String amazonAWSAccessKey;
 
     @Value("${spring.data.aws.secret-key}")
     private String amazonAWSSecretKey;
 
+    /**
+     * get AWSCredentialsProvider
+     *
+     * @return AWSCredentialsProvider
+     */
     public AWSCredentialsProvider amazonAWSCredentialsProvider() {
         return new AWSStaticCredentialsProvider(amazonAWSCredentials());
     }
 
+    /**
+     * get DynamoDBMapperConfig
+     *
+     * @return DynamoDBMapperConfig
+     */
     @Bean
     public DynamoDBMapperConfig dynamoDBMapperConfig() {
         return DynamoDBMapperConfig.DEFAULT;
     }
 
+    /**
+     * get DynamoDBMapper
+     *
+     * @param amazonDynamoDB amazonDynamoDB
+     * @param config         config
+     * @return DynamoDBMapper
+     */
     @Bean
-    public DynamoDBMapper dynamoDBMapper(AmazonDynamoDB amazonDynamoDB, DynamoDBMapperConfig config) {
+    public DynamoDBMapper dynamoDBMapper(AmazonDynamoDB amazonDynamoDB,
+        DynamoDBMapperConfig config) {
         return new DynamoDBMapper(amazonDynamoDB, config);
     }
 
+    /**
+     * get AmazonDynamoDB
+     *
+     * @return AmazonDynamoDB
+     */
     @Bean
     public AmazonDynamoDB amazonDynamoDB() {
-        return AmazonDynamoDBClientBuilder.standard().withCredentials(amazonAWSCredentialsProvider())
+        return AmazonDynamoDBClientBuilder.standard()
+            .withCredentials(amazonAWSCredentialsProvider())
             .withRegion(Regions.US_WEST_1).build();
     }
 
+    /**
+     * get AWSCredentials
+     *
+     * @return AWSCredentials
+     */
     @Bean
     public AWSCredentials amazonAWSCredentials() {
         return new BasicAWSCredentials(amazonAWSAccessKey, amazonAWSSecretKey);

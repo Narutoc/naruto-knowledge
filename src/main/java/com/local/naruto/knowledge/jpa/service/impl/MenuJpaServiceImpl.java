@@ -11,6 +11,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
+/**
+ * implement for MenuJpaService
+ */
 @Service
 public class MenuJpaServiceImpl implements MenuJpaService {
 
@@ -19,7 +22,7 @@ public class MenuJpaServiceImpl implements MenuJpaService {
 
     @Override
     public void addMenuInfo(MenuInfo model) throws ServiceException {
-        
+
     }
 
     @Override
