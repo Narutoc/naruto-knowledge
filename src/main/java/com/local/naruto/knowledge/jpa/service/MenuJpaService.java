@@ -18,6 +18,13 @@ public interface MenuJpaService {
     void addMenuInfo(MenuInfo model) throws ServiceException;
 
     /**
+     * 从excel导入菜单信息
+     *
+     * @throws ServiceException 异常
+     */
+    void importFromExcel() throws ServiceException;
+
+    /**
      * 查询所有菜单
      *
      * @return List<MenuModel>

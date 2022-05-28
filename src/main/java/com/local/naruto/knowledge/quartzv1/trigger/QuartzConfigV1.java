@@ -1,6 +1,6 @@
-package com.local.naruto.knowledge.quartz.trigger;
+package com.local.naruto.knowledge.quartzv1.trigger;
 
-import com.local.naruto.knowledge.quartz.job.TestCornJob;
+import com.local.naruto.knowledge.quartzv1.job.TestCornJob;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.JobBuilder;
 import org.quartz.JobDetail;
@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
  * config for quartz
  */
 @Configuration
-public class QuartzConfig {
+public class QuartzConfigV1 {
 
     @Bean
     public JobDetail demoJobDetail() {
@@ -25,7 +25,7 @@ public class QuartzConfig {
         return TriggerBuilder.newTrigger()
             .forJob(demoJobDetail())
             .startNow()
-            .withSchedule(CronScheduleBuilder.cronSchedule("0/10 * * * * ? "))
+            .withSchedule(CronScheduleBuilder.cronSchedule("0/10 * * * * ?"))
             .build();
     }
 }

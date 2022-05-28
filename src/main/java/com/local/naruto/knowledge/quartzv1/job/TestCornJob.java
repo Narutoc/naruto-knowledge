@@ -1,4 +1,4 @@
-package com.local.naruto.knowledge.quartz.job;
+package com.local.naruto.knowledge.quartzv1.job;
 
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;

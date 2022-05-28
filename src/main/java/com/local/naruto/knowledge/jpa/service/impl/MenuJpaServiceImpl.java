@@ -22,6 +22,11 @@ public class MenuJpaServiceImpl implements MenuJpaService {
 
     @Override
     public void addMenuInfo(MenuInfo model) throws ServiceException {
+        menuRepository.save(model);
+    }
+
+    @Override
+    public void importFromExcel() throws ServiceException {
 
     }
 
