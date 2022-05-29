@@ -6,6 +6,7 @@
         <result column="menuId" property="menuId"/>
         <result column="parentId" property="parentId"/>
         <result column="sortNum" property="sortNum"/>
+        <result column="status" property="status"/>
         <result column="createdUser" property="createdUser"/>
         <result column="createdDate" property="createdDate"/>
         <result column="lastModifiedUser" property="lastModifiedUser"/>
@@ -39,6 +40,7 @@
         menuid `menuId`,
         parentid `parentId`,
         sortnum `sortNum`,
+        status `status`,
         createduser `createdUser`,
         createddate `createdDate`,
         lastmodifieduser `lastModifiedUser`,

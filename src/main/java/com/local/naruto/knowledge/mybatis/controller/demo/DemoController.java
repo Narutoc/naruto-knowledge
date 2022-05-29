@@ -2,6 +2,9 @@ package com.local.naruto.knowledge.mybatis.controller.demo;
 
 import com.local.naruto.common.JsonResult;
 import com.local.naruto.knowledge.mybatis.entity.ConditionModel;
+import com.local.naruto.knowledge.util.ExportExcelUtil;
+import java.io.IOException;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -60,5 +63,10 @@ public class DemoController {
     @RequestMapping(method = RequestMethod.PUT)
     public JsonResult<ConditionModel> updateDemo(@RequestBody ConditionModel model) {
         return new JsonResult<>(model);
+    }
+
+    @GetMapping(value = "/excel")
+    public void getExcelInfo() throws Exception {
+        ExportExcelUtil.readInfo("D:\\tmp\\menuInfo.xlsx");
     }
 }
