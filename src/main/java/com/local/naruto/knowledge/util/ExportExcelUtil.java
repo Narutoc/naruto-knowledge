@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -30,12 +31,11 @@ public class ExportExcelUtil {
             String fileType = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
             // 根据路径获取输入流
             inputStream = new FileInputStream(file.getAbsolutePath());
-            workbook = new XSSFWorkbook(inputStream);
-//            if (fileType.equalsIgnoreCase("xls")) {
-//                workbook = new HSSFWorkbook(inputStream);
-//            } else if (fileType.equalsIgnoreCase("xlsx")) {
-//                workbook = new XSSFWorkbook(inputStream);
-//            }
+            if (fileType.equalsIgnoreCase("xls")) {
+                workbook = new HSSFWorkbook(inputStream);
+            } else if (fileType.equalsIgnoreCase("xlsx")) {
+                workbook = new XSSFWorkbook(inputStream);
+            }
             String[][] cellVals;
             System.out.println("sheet num is " + workbook.getNumberOfSheets());
             for (int sheetNum = 0; sheetNum < workbook.getNumberOfSheets(); sheetNum++) {
@@ -74,14 +74,6 @@ public class ExportExcelUtil {
                         System.out.println(
                             "第" + (rowNum + 1) + "行，第" + (i + 1) + "列数据为" + cellVals[rowNum
                                 - 1][i]);
-                        // 语言类型分为三类
-//                        for (int lanNum = 1; lanNum <= 3; lanNum++) {
-//                            System.out.println("第" + i + "种语言信息如下");
-//                            System.out.println("名称：" + cellVals[rowNum - 1][lanNum * 4 + 0 - 2]);
-//                            System.out.println("描述：" + cellVals[rowNum - 1][lanNum * 4 + 1 - 2]);
-//                            System.out.println("访问链接：" + cellVals[rowNum - 1][lanNum * 4 + 2 - 2]);
-//                            System.out.println("状态：" + cellVals[rowNum - 1][lanNum * 4 + 3 - 2]);
-//                        }
                     }
                 }
             }
@@ -109,12 +101,11 @@ public class ExportExcelUtil {
             String fileType = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
             // 根据路径获取输入流
             inputStream = new FileInputStream(file.getAbsolutePath());
-            workbook = new XSSFWorkbook(inputStream);
-//            if (fileType.equalsIgnoreCase("xls")) {
-//                workbook = new HSSFWorkbook(inputStream);
-//            } else if (fileType.equalsIgnoreCase("xlsx")) {
-//                workbook = new XSSFWorkbook(inputStream);
-//            }
+            if (fileType.equalsIgnoreCase("xls")) {
+                workbook = new HSSFWorkbook(inputStream);
+            } else if (fileType.equalsIgnoreCase("xlsx")) {
+                workbook = new XSSFWorkbook(inputStream);
+            }
             String[][] cellVals;
             System.out.println("sheet num is " + workbook.getNumberOfSheets());
             for (int sheetNum = 0; sheetNum < workbook.getNumberOfSheets(); sheetNum++) {
