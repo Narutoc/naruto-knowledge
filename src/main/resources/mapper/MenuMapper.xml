@@ -15,7 +15,7 @@
           javaType="java.util.ArrayList"
           ofType="com.local.naruto.knowledge.mybatis.entity.MenuModel"
           select="getChildMenu"/>
-        <collection property="contentList" column="{menuId = menuId}"
+        <collection property="menuLanguageList" column="{menuId = menuId}"
           javaType="java.util.ArrayList"
           ofType="com.local.naruto.knowledge.mybatis.entity.ContentModel"
           select="getMenuContent"/>
@@ -66,13 +66,34 @@
     <insert id="addMenuInfo" parameterType="com.local.naruto.knowledge.mybatis.entity.MenuModel">
         INSERT INTO tbl_menu_info
         (
-        menuid,parentid,status,sortnum,createduser,createddate,lastmodifieduser,lastmodifieddate
+            menuid,parentid,status,sortnum,createduser,createddate,lastmodifieduser,lastmodifieddate
         )
         VALUES
         (
-        #{menuId},#{parentId}, #{status},#{sortNum},#{createdUser},#{createdDate},
-        #{lastModifiedUser},#{lastModifiedDate}
+            #{menuId},#{parentId}, #{status},#{sortNum},#{createdUser},#{createdDate},
+            #{lastModifiedUser},#{lastModifiedDate}
         )
+    </insert>
+
+    <!--批量新增-->
+    <insert id="batchInsertMenu" parameterType="java.util.List">
+        INSERT INTO tbl_menu_info
+        (
+            menuid,parentid,status,sortnum,createduser,createddate,lastmodifieduser,lastmodifieddate
+        )
+        VALUES
+        <foreach collection="list" index="index" item="menu" separator=",">
+            (
+                #{menu.menuId},
+                #{menu.parentId},
+                #{menu.status},
+                #{menu.sortNum},
+                #{menu.createdUser},
+                #{menu.createdDate},
+                #{menu.lastModifiedUser},
+                #{menu.lastModifiedDate}
+            )
+        </foreach>
     </insert>
 
     <!--根据id查询菜单信息-->

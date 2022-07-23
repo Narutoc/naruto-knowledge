@@ -38,6 +38,14 @@ public class MenuController {
         return new JsonResult<>(model.getMenuId());
     }
 
+    @PostMapping("/batch")
+    public JsonResult<String> batchInsertMenu() {
+        String path = "D:\\tmp\\menuInfo_copy.xlsx";
+        String userId = "naruto";
+        menuService.exportMenuInfoFromExcel(path, userId);
+        return new JsonResult<>();
+    }
+
     /**
      * 编辑菜单信息
      *

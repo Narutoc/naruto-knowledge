@@ -22,6 +22,13 @@ public interface MenuMapper {
     void addMenuInfo(MenuModel model);
 
     /**
+     * 批量新增菜单信息
+     *
+     * @param list 菜单列表
+     */
+    void batchInsertMenu(List<MenuModel> list);
+
+    /**
      * 根据菜单id查询信息
      *
      * @param menuId 菜单id

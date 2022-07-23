@@ -1,14 +1,18 @@
 package com.local.naruto.knowledge.util;
 
-import com.alibaba.fastjson.JSON;
+import com.local.naruto.exception.BadRequestException;
 import com.local.naruto.knowledge.mybatis.entity.ContentModel;
 import com.local.naruto.knowledge.mybatis.entity.MenuModel;
+import com.local.naruto.utils.DateUtils;
+import com.local.naruto.utils.UUIDUtils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -16,60 +20,60 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+@Slf4j
 public class ExportExcelUtil {
 
-    public static void readInfo(String path) throws IOException {
+    /**
+     * 读取excel表格内容
+     *
+     * @param path   文件路径
+     * @param userId 用户id
+     */
+    public static List<MenuModel> readInfo(String path, String userId) throws IOException {
         Workbook workbook = null;
         InputStream inputStream = null;
         String fileName;
         try {
-            // path是指欲下载的文件的路径。
             File file = new File(path);
-            // 取得文件名
             fileName = file.getName();
             // 获取Excel后缀名
             String fileType = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
-            // 根据路径获取输入流
             inputStream = new FileInputStream(file.getAbsolutePath());
             if (fileType.equalsIgnoreCase("xls")) {
                 workbook = new HSSFWorkbook(inputStream);
             } else if (fileType.equalsIgnoreCase("xlsx")) {
                 workbook = new XSSFWorkbook(inputStream);
             }
-            String[][] cellVals;
-            for (int sheetNum = 0; sheetNum < workbook.getNumberOfSheets(); sheetNum++) {
-                Sheet sheet = workbook.getSheetAt(sheetNum);
-                // 校验sheet是否合法
-                if (sheet == null) {
+            Sheet sheet = workbook.getSheetAt(0);
+            // 校验sheet是否合法
+            if (sheet == null) {
+                log.error("excel sheet can not be null！！");
+                throw new BadRequestException("excel sheet is null", "excel sheet is null");
+            }
+            // 获取第一行数据
+            int firstRowNum = sheet.getFirstRowNum();
+            // 解析起始行
+            int rowStart = firstRowNum + 2;
+            // 数据总行数
+            int rowEnd = sheet.getPhysicalNumberOfRows();
+            List<MenuModel> menuList = new ArrayList<>();
+            // 解析每一行的数据，构造数据对象
+            for (int rowNum = rowStart; rowNum < rowEnd; rowNum++) {
+                // 获取第rowNum行的数据
+                Row row = sheet.getRow(rowNum);
+                if (null == row) {
                     continue;
                 }
-                // 获取第一行数据
-                int firstRowNum = sheet.getFirstRowNum();
-                // 解析起始行
-                int rowStart = firstRowNum + 2;
-                // 数据总行数
-                int rowEnd = sheet.getPhysicalNumberOfRows();
-                // 解析每一行的数据，构造数据对象
-                for (int rowNum = rowStart; rowNum < rowEnd; rowNum++) {
-                    // 获取第rowNum行的数据
-                    Row row = sheet.getRow(rowNum);
-                    if (null == row) {
-                        continue;
-                    }
-                    // 获取每行有多少列数据
-                    int cellLength = row.getLastCellNum();
-                    System.out.println("cellLength is " + cellLength);
-                    Cell cell;
-                    cellVals = new String[rowNum][cellLength];
-                    for (int i = 0; i < cellLength; i++) {
-                        // 获取rowNum行i列的数据
-                        cell = row.getCell(i);
-                        String value = convertGeneralCellValueToString(cell);
-                        cellVals[rowNum - 1][i] = value;
-                        System.out.println("第" + (rowNum + 1) + "行，第" + (i + 1) + "列数据为" + cellVals[rowNum - 1][i]);
-                    }
-                }
+                // 菜单基础信息
+                MenuModel menu = convertRow2MenuModel(row, userId);
+                // 菜单各语言信息
+                List<ContentModel> menuLanguageList = convertRow2MenuContent(row, userId,
+                    menu.getMenuId());
+                menu.setMenuLanguageList(menuLanguageList);
+                menuList.add(menu);
             }
+            log.info("menuList size is " + menuList.size());
+            return menuList;
         } finally {
             if (null != workbook) {
                 workbook.close();
@@ -80,248 +84,111 @@ public class ExportExcelUtil {
         }
     }
 
-    public static List<MenuModel> readExcelByPath(String path) throws IOException {
-        Workbook workbook = null;
-        InputStream inputStream = null;
-        String fileName;
-        List<MenuModel> menuList = new ArrayList<>();
-        try {
-            // path是指欲下载的文件的路径。
-            File file = new File(path);
-            // 取得文件名
-            fileName = file.getName();
-            // 获取Excel后缀名
-            String fileType = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
-            // 根据路径获取输入流
-            inputStream = new FileInputStream(file.getAbsolutePath());
-            if (fileType.equalsIgnoreCase("xls")) {
-                workbook = new HSSFWorkbook(inputStream);
-            } else if (fileType.equalsIgnoreCase("xlsx")) {
-                workbook = new XSSFWorkbook(inputStream);
-            }
-            String[][] cellVals;
-            System.out.println("sheet num is " + workbook.getNumberOfSheets());
-            for (int sheetNum = 0; sheetNum < workbook.getNumberOfSheets(); sheetNum++) {
-                Sheet sheet = workbook.getSheetAt(sheetNum);
-                // 校验sheet是否合法
-                if (sheet == null) {
-                    continue;
-                }
-                // 获取第一行数据
-                int firstRowNum = sheet.getFirstRowNum();
-                System.out.println("firstRowNum is " + firstRowNum);
-                // 解析起始行
-                int rowStart = firstRowNum + 2;
-                System.out.println("rowStart is " + rowStart);
-                // 数据总行数
-                int rowEnd = sheet.getPhysicalNumberOfRows();
-                System.out.println("all row num is " + rowEnd);
-                // 解析每一行的数据，构造数据对象
-                for (int rowNum = rowStart; rowNum < rowEnd; rowNum++) {
-                    System.out.println("读取第" + rowNum + "行的数据");
-                    // 获取第rowNum行的数据
-                    Row row = sheet.getRow(rowNum);
-                    if (null == row) {
-                        continue;
-                    }
-                    // 获取每行有多少列数据
-                    int cellLength = row.getLastCellNum();
-                    System.out.println("cellLength is " + cellLength);
-                    Cell cell;
-                    cellVals = new String[rowNum][cellLength];
-                    for (int i = 0; i < cellLength; i++) {
-                        // 获取rowNum行i列的数据
-                        cell = row.getCell(i);
-                        String value = convertGeneralCellValueToString(cell);
-                        cellVals[rowNum - 1][i] = value;
-                        System.out.println("第" + (rowNum + 1) + "行，第" + (i + 1) + "列数据为" + cellVals[rowNum - 1][i]);
-                        MenuModel single = new MenuModel();
-                        single.setSortNum(cellVals[rowNum - 1][0]);
-                        System.out.println("menu sort num is " + single.getSortNum());
-                        if (cellVals[rowNum - 1][1].equals("启用")) {
-                            single.setStatus("1");
-                        }
-                        if (cellVals[rowNum - 1][1].equals("停用")) {
-                            single.setStatus("2");
-                        }
-                        if (cellVals[rowNum - 1][1].equals("删除")) {
-                            single.setStatus("3");
-                        }
-                        System.out.println("menu status is " + single.getStatus());
-                        List<ContentModel> contentList = new ArrayList<>();
-                        // 语言类型分为三类
-                        for (int lanNum = 1; lanNum <= 3; lanNum++) {
-                            ContentModel singleContent = new ContentModel();
-                            singleContent.setContent1(cellVals[rowNum - 1][lanNum * 4 + 0 - 2]);
-                            singleContent.setContent2(cellVals[rowNum - 1][lanNum * 4 + 1 - 2]);
-                            singleContent.setContent3(cellVals[rowNum - 1][lanNum * 4 + 2 - 2]);
-                            if (cellVals[rowNum - 1][lanNum * 4 + 3 - 2].equals("启用")) {
-                                singleContent.setStatus("1");
-                            }
-                            if (cellVals[rowNum - 1][lanNum * 4 + 3 - 2].equals("停用")) {
-                                singleContent.setStatus("2");
-                            }
-                            if (cellVals[rowNum - 1][lanNum * 4 + 3 - 2].equals("删除")) {
-                                singleContent.setStatus("3");
-                            }
-                            System.out.println("content status is " + singleContent.getStatus());
-                            contentList.add(singleContent);
-                            System.out.println("single content info is " + JSON.toJSONString(single));
-                            single.setContentList(contentList);
-                        }
-                        System.out.println("single menu info is " + JSON.toJSONString(single));
-                        menuList.add(single);
-                    }
-                }
-            }
-        } finally {
-            if (null != workbook) {
-                workbook.close();
-            }
-            if (null != inputStream) {
-                inputStream.close();
-            }
+    private static MenuModel convertRow2MenuModel(Row row, String userId) {
+        MenuModel menu = new MenuModel();
+        menu.setMenuId(UUIDUtils.generateUuid());
+        // 第一列为菜单排序信息
+        String sortNum = convertCellValueToString(row.getCell(0));
+        menu.setSortNum(sortNum);
+        // 第二列为菜单状态
+        String statusValue = convertCellValueToString(row.getCell(1));
+        if (StringUtils.isEmpty(statusValue)) {
+            log.error("menu status can not be null！！");
+            throw new BadRequestException("menu status is null", "menu status is null");
         }
-        System.out.println("menuList info is " + JSON.toJSONString(menuList));
-        return menuList;
+        if (statusValue.equals("启用")) {
+            menu.setStatus("1");
+        }
+        if (statusValue.equals("停用")) {
+            menu.setStatus("2");
+        }
+        if (statusValue.equals("删除")) {
+            menu.setStatus("3");
+        }
+        menu.setCreatedDate(DateUtils.getUtcTime());
+        menu.setLastModifiedDate(DateUtils.getUtcTime());
+        menu.setCreatedUser(userId);
+        menu.setLastModifiedUser(userId);
+        return menu;
+    }
+
+    private static List<ContentModel> convertRow2MenuContent(Row row, String userId,
+        String menuId) {
+        List<ContentModel> menuLanguageList = new ArrayList<>();
+        // 3~14列为语言信息，每4列为一种语言信息
+        // 共有三种语言
+        // 每种语言由3个小列组成:1-中文，2-英文，3-俄文
+        for (int languageNum = 1; languageNum <= 3; languageNum++) {
+            ContentModel languageInfo = new ContentModel();
+            languageInfo.setContentId(UUIDUtils.generateUuid());
+            languageInfo.setObjectId(menuId);
+            languageInfo.setLang(String.valueOf(languageNum));
+            // 表格行列起始为0
+            String menuName = convertCellValueToString(row.getCell(4 * languageNum + 0 - 2));
+            log.info("菜单名称：" + menuName);
+            languageInfo.setContent1(menuName);
+            String menuDesc = convertCellValueToString(row.getCell(4 * languageNum + 1 - 2));
+            log.info("菜单描述：" + menuDesc);
+            languageInfo.setContent2(menuDesc);
+            String menuLink = convertCellValueToString(row.getCell(4 * languageNum + 2 - 2));
+            log.info("菜单链接：" + menuLink);
+            languageInfo.setContent3(menuLink);
+            String languageStatus = convertCellValueToString(row.getCell(4 * languageNum + 3 - 2));
+            if (StringUtils.isEmpty(languageStatus)) {
+                log.error("language status can not be null！！");
+                throw new BadRequestException("language status is null", "language status is null");
+            }
+            if (languageStatus.equals("启用")) {
+                languageInfo.setStatus("1");
+            }
+            if (languageStatus.equals("停用")) {
+                languageInfo.setStatus("2");
+            }
+            if (languageStatus.equals("删除")) {
+                languageInfo.setStatus("3");
+            }
+            languageInfo.setCreatedDate(DateUtils.getUtcTime());
+            languageInfo.setLastModifiedDate(DateUtils.getUtcTime());
+            languageInfo.setCreatedUser(userId);
+            languageInfo.setLastModifiedUser(userId);
+            menuLanguageList.add(languageInfo);
+        }
+        return menuLanguageList;
     }
 
     /**
      * 将单元格内容转换为字符串
      *
-     * @param cell
-     * @return
+     * @param cell 单元格对象
+     * @return 返回单元格内容
      */
-    private static String convertGeneralCellValueToString(Cell cell) {
-        String returnValue = null;
+    private static String convertCellValueToString(Cell cell) {
+        String cellValue = null;
+        if (cell == null) {
+            return null;
+        }
         switch (cell.getCellType()) {
             case NUMERIC:   //数字
-                Double doubleValue = cell.getNumericCellValue();
-                returnValue = doubleValue.toString();
+                cellValue = String.valueOf(cell.getNumericCellValue());
+                if (cellValue.endsWith(".0")) {
+                    cellValue = cellValue.substring(0, cellValue.indexOf(".0"));
+                }
                 break;
-            case STRING:    //字符串
-                returnValue = cell.getStringCellValue();
+            case STRING:
+                cellValue = cell.getStringCellValue();
                 break;
-            case BOOLEAN:   //布尔
-                Boolean booleanValue = cell.getBooleanCellValue();
-                returnValue = booleanValue.toString();
+            case BOOLEAN:
+                boolean booleanValue = cell.getBooleanCellValue();
+                cellValue = Boolean.toString(booleanValue);
                 break;
-            case BLANK:     // 空值
+            case BLANK:
                 break;
-            case FORMULA:   // 公式
-                returnValue = cell.getCellFormula();
-                break;
-            case ERROR:     // 故障
+            case FORMULA:
+                cellValue = cell.getCellFormula();
                 break;
             default:
                 break;
         }
-        return returnValue;
+        return cellValue;
     }
-
-    /**
-     * 解析excel每一行每一列的数据
-     *
-     * @param rowStart 开始行数
-     * @param rowEnd   excel一共有多少行
-     * @param sheet    当前处理的sheet
-     */
-//    private List<MenuInfo> analyseAllRowAndCell(int rowStart, int rowEnd, Sheet sheet) {
-//        List<MenuInfo> menuList = new ArrayList<>();
-//        String[][] cellVals;
-//        // 解析每一行的数据，构造数据对象
-//        for (int rowNum = rowStart; rowNum < rowEnd; rowNum++) {
-//            // 获取第rowNum行的数据
-//            Row row = sheet.getRow(rowNum);
-//            if (null == row) {
-//                continue;
-//            }
-//            // 获取每行有多少列数据
-//            int cellLength = row.getLastCellNum();
-//            Cell cell;
-//            cellVals = new String[rowNum][cellLength];
-//            MenuInfo single = null;
-//            List<ContentInfo> contentList = null;
-//            for (int i = 0; i < cellLength; i++) {
-//                // 获取rowNum行i列的数据
-//                cell = row.getCell(i);
-//                String value = convertGeneralCellValueToString(cell);
-//                cellVals[rowNum - 1][i] = value;
-//                single = new MenuInfo();
-//                single.setSortNum(Integer.getInteger(cellVals[rowNum - 1][1]));
-//                if (cellVals[rowNum - 1][2].equals("启用")) {
-//                    single.setStatus("1");
-//                }
-//                if (cellVals[rowNum - 1][2].equals("停用")) {
-//                    single.setStatus("2");
-//                }
-//                if (cellVals[rowNum - 1][2].equals("删除")) {
-//                    single.setStatus("3");
-//                }
-//                // 语言类型分为三类
-//                for (int lanNum = 1; lanNum <= 3; lanNum++) {
-//                    ContentInfo singleContent = new ContentInfo();
-//                    singleContent.setContent1(cellVals[rowNum - 1][lanNum * 4 + 1 - 2]);
-//                    singleContent.setContent2(cellVals[rowNum - 1][lanNum * 4 + 2 - 2]);
-//                    singleContent.setContent3(cellVals[rowNum - 1][lanNum * 4 + 3 - 2]);
-//                    if (cellVals[rowNum - 1][lanNum * 4 + 4 - 2].equals("启用")) {
-//                        singleContent.setStatus("1");
-//                    }
-//                    if (cellVals[rowNum - 1][lanNum * 4 + 4 - 2].equals("停用")) {
-//                        singleContent.setStatus("2");
-//                    }
-//                    if (cellVals[rowNum - 1][lanNum * 4 + 4 - 2].equals("删除")) {
-//                        singleContent.setStatus("3");
-//                    }
-//                    contentList.add(singleContent);
-//                }
-//            }
-//            single.setContentList(contentList);
-//            System.out.println("single is " + JSON.toJSONString(single));
-//            menuList.add(single);
-//        }
-//        return menuList;
-//    }
-
-//    private MenuInfo analyseSingleRowAndCell(int cellLength, Row row, String[][] cellVals,
-//        int rowNum) {
-//        List<ContentInfo> contentList = null;
-//        MenuInfo single = null;
-//        Cell cell;
-//        for (int i = 0; i < cellLength; i++) {
-//            // 获取rowNum行i列的数据
-//            cell = row.getCell(i);
-//            String value = convertGeneralCellValueToString(cell);
-//            cellVals[rowNum - 1][i] = value;
-//            single.setSortNum(Integer.getInteger(cellVals[rowNum - 1][1]));
-//            if (cellVals[rowNum - 1][2].equals("启用")) {
-//                single.setStatus("1");
-//            }
-//            if (cellVals[rowNum - 1][2].equals("停用")) {
-//                single.setStatus("2");
-//            }
-//            if (cellVals[rowNum - 1][2].equals("删除")) {
-//                single.setStatus("3");
-//            }
-//            // 语言类型分为三类
-//            for (int lanNum = 1; lanNum <= 3; lanNum++) {
-//                ContentInfo singleContent = new ContentInfo();
-//                singleContent.setContent1(cellVals[rowNum - 1][lanNum * 4 + 1 - 2]);
-//                singleContent.setContent2(cellVals[rowNum - 1][lanNum * 4 + 2 - 2]);
-//                singleContent.setContent3(cellVals[rowNum - 1][lanNum * 4 + 3 - 2]);
-//                if (cellVals[rowNum - 1][lanNum * 4 + 4 - 2].equals("启用")) {
-//                    singleContent.setStatus("1");
-//                }
-//                if (cellVals[rowNum - 1][lanNum * 4 + 4 - 2].equals("停用")) {
-//                    singleContent.setStatus("2");
-//                }
-//                if (cellVals[rowNum - 1][lanNum * 4 + 4 - 2].equals("删除")) {
-//                    singleContent.setStatus("3");
-//                }
-//                contentList.add(singleContent);
-//            }
-//        }
-//        single.setContentList(contentList);
-//        return single;
-//    }
 }

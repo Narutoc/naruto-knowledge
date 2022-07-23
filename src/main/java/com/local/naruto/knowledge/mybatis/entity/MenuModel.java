@@ -22,5 +22,5 @@ public class MenuModel extends CommonModel {
     private String parentId;
     private String sortNum;
     private List<MenuModel> child;
-    private List<ContentModel> contentList;
+    private List<ContentModel> menuLanguageList;
 }

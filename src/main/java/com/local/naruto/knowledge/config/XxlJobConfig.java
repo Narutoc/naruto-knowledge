@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class XxlJobConfig {
 
-    private final Logger LOGGER = LoggerFactory.getLogger(XxlJobConfig.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(XxlJobConfig.class);
 
     @Value("${xxl.job.admin.addresses}")
     private String adminAddresses;

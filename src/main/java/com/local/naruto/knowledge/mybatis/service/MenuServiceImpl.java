@@ -7,8 +7,11 @@ import com.local.naruto.knowledge.mybatis.entity.MenuModel;
 import com.local.naruto.knowledge.mybatis.mapper.menu.MenuMapper;
 import com.local.naruto.knowledge.mybatis.service.content.ContentService;
 import com.local.naruto.knowledge.mybatis.service.menu.MenuService;
+import com.local.naruto.knowledge.util.ExportExcelUtil;
 import com.local.naruto.utils.DateUtils;
 import com.local.naruto.utils.UUIDUtils;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -56,7 +59,7 @@ public class MenuServiceImpl implements MenuService {
                     throw ServiceException.paramException("parent menu does not exist");
                 }
             }
-            handleMenuContent(model.getContentList(), model.getMenuId());
+            handleMenuContent(model.getMenuLanguageList(), model.getMenuId());
             menuMapper.addMenuInfo(model);
             return;
         } catch (BindingException bind) {
@@ -129,7 +132,7 @@ public class MenuServiceImpl implements MenuService {
                 throw new ServiceException(Constants.INT_400, "updated menu does not exist");
             }
             // 多语言信息处理：先删除，再新增
-            handleMenuContent(model.getContentList(), model.getMenuId());
+            handleMenuContent(model.getMenuLanguageList(), model.getMenuId());
             model.setLastModifiedDate(DateUtils.getUtcTime());
             menuMapper.updateMenuInfo(model);
             return;
@@ -141,6 +144,35 @@ public class MenuServiceImpl implements MenuService {
         throw new ServiceException(Constants.INT_500, "updateMenuInfo caught en error");
     }
 
+    /**
+     * 批量插入菜单信息
+     *
+     * @param path 文件路径
+     * @param userId 操作人id
+     * @throws ServiceException 异常
+     */
+    @Override
+    @Transactional(rollbackFor = {ServiceException.class})
+    public void exportMenuInfoFromExcel(String path, String userId) throws ServiceException {
+        try {
+            List<MenuModel> menuList = ExportExcelUtil.readInfo(path, userId);
+            // 批量插入菜单基础信息
+            menuMapper.batchInsertMenu(menuList);
+            List<ContentModel> allMenuLanguage = new ArrayList<>();
+            for (MenuModel menu : menuList) {
+                List<ContentModel> menuLanguageList = menu.getMenuLanguageList();
+                allMenuLanguage.addAll(menuLanguageList);
+            }
+            // 批量插入菜单语言信息
+            contentService.batchInsertContent(allMenuLanguage);
+            return;
+        } catch (BindingException bind) {
+            log.error("exportMenuInfoFromExcel bindingException is " + bind.getMessage());
+        } catch (Exception exception) {
+            log.error("exportMenuInfoFromExcel exception is" + exception.getMessage());
+        }
+        throw new ServiceException(Constants.INT_500, "exportMenuInfoFromExcel caught en error");
+    }
 
     private void handleMenuContent(List<ContentModel> contentList, String menuId) {
         if (CollectionUtils.isNotEmpty(contentList)) {

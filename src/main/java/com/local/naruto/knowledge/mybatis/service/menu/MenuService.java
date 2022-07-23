@@ -21,6 +21,15 @@ public interface MenuService {
     void addMenuInfo(MenuModel model) throws ServiceException;
 
     /**
+     * 批量插入菜单信息
+     *
+     * @param path   文件路径
+     * @param userId 操作人id
+     * @throws ServiceException 异常
+     */
+    void exportMenuInfoFromExcel(String path, String userId) throws ServiceException;
+
+    /**
      * 查询所有菜单
      *
      * @return List<MenuModel>
