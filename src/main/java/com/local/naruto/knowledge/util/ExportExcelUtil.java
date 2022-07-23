@@ -37,7 +37,6 @@ public class ExportExcelUtil {
                 workbook = new XSSFWorkbook(inputStream);
             }
             String[][] cellVals;
-            System.out.println("sheet num is " + workbook.getNumberOfSheets());
             for (int sheetNum = 0; sheetNum < workbook.getNumberOfSheets(); sheetNum++) {
                 Sheet sheet = workbook.getSheetAt(sheetNum);
                 // 校验sheet是否合法
@@ -46,16 +45,12 @@ public class ExportExcelUtil {
                 }
                 // 获取第一行数据
                 int firstRowNum = sheet.getFirstRowNum();
-                System.out.println("firstRowNum is " + firstRowNum);
                 // 解析起始行
                 int rowStart = firstRowNum + 2;
-                System.out.println("rowStart is " + rowStart);
                 // 数据总行数
                 int rowEnd = sheet.getPhysicalNumberOfRows();
-                System.out.println("all row num is " + rowEnd);
                 // 解析每一行的数据，构造数据对象
                 for (int rowNum = rowStart; rowNum < rowEnd; rowNum++) {
-                    System.out.println("读取第" + rowNum + "行的数据");
                     // 获取第rowNum行的数据
                     Row row = sheet.getRow(rowNum);
                     if (null == row) {
@@ -71,9 +66,7 @@ public class ExportExcelUtil {
                         cell = row.getCell(i);
                         String value = convertGeneralCellValueToString(cell);
                         cellVals[rowNum - 1][i] = value;
-                        System.out.println(
-                            "第" + (rowNum + 1) + "行，第" + (i + 1) + "列数据为" + cellVals[rowNum
-                                - 1][i]);
+                        System.out.println("第" + (rowNum + 1) + "行，第" + (i + 1) + "列数据为" + cellVals[rowNum - 1][i]);
                     }
                 }
             }
@@ -141,13 +134,10 @@ public class ExportExcelUtil {
                         cell = row.getCell(i);
                         String value = convertGeneralCellValueToString(cell);
                         cellVals[rowNum - 1][i] = value;
-                        System.out.println(
-                            "第" + (rowNum + 1) + "行，第" + (i + 1) + "列数据为" + cellVals[rowNum
-                                - 1][i]);
+                        System.out.println("第" + (rowNum + 1) + "行，第" + (i + 1) + "列数据为" + cellVals[rowNum - 1][i]);
                         MenuModel single = new MenuModel();
                         single.setSortNum(cellVals[rowNum - 1][0]);
                         System.out.println("menu sort num is " + single.getSortNum());
-                        System.out.println("第3行，第2列的数据" + cellVals[rowNum - 1][1]);
                         if (cellVals[rowNum - 1][1].equals("启用")) {
                             single.setStatus("1");
                         }
@@ -158,9 +148,9 @@ public class ExportExcelUtil {
                             single.setStatus("3");
                         }
                         System.out.println("menu status is " + single.getStatus());
+                        List<ContentModel> contentList = new ArrayList<>();
                         // 语言类型分为三类
                         for (int lanNum = 1; lanNum <= 3; lanNum++) {
-                            List<ContentModel> contentList = null;
                             ContentModel singleContent = new ContentModel();
                             singleContent.setContent1(cellVals[rowNum - 1][lanNum * 4 + 0 - 2]);
                             singleContent.setContent2(cellVals[rowNum - 1][lanNum * 4 + 1 - 2]);
@@ -176,8 +166,7 @@ public class ExportExcelUtil {
                             }
                             System.out.println("content status is " + singleContent.getStatus());
                             contentList.add(singleContent);
-                            System.out.println(
-                                "single content info is " + JSON.toJSONString(single));
+                            System.out.println("single content info is " + JSON.toJSONString(single));
                             single.setContentList(contentList);
                         }
                         System.out.println("single menu info is " + JSON.toJSONString(single));
@@ -193,6 +182,7 @@ public class ExportExcelUtil {
                 inputStream.close();
             }
         }
+        System.out.println("menuList info is " + JSON.toJSONString(menuList));
         return menuList;
     }
 

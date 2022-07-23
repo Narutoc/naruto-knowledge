@@ -74,3 +74,16 @@ mybatis:
 #showSql
 logging:
   level.com.local.naruto.knowledge.mybatis.maapper: debug
+
+xxl:
+  job:
+    admin:
+      addresses: http://127.0.0.1:8080/xxl-job-admin
+    accessToken: default_token
+    executor:
+      appname : ${spring.application.name}
+      address: ''
+      ip: ''
+      port: 9999
+      logpath: /data/applogs/xxl-job/jobhandler
+      logretentiondays: 30

@@ -67,6 +67,7 @@ public class DemoController {
 
     @GetMapping(value = "/excel")
     public void getExcelInfo() throws Exception {
+//        ExportExcelUtil.readExcelByPath("D:\\tmp\\menuInfo_copy.xlsx");
         ExportExcelUtil.readInfo("D:\\tmp\\menuInfo_copy.xlsx");
     }
 }
